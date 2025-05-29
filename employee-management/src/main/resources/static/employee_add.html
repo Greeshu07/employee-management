@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Employee</title>
+</head>
+<body>
+    <h2>Add Employee</h2>
+    <form id="empForm" enctype="multipart/form-data">
+        <input type="text" name="firstName" placeholder="First Name" required /><br>
+        <input type="text" name="middleName" placeholder="Middle Name" /><br>
+        <input type="text" name="lastName" placeholder="Last Name" required /><br>
+        <input type="date" name="dob" required /><br>
+        <select name="department">
+            <option>Engineering</option>
+            <option>Support</option>
+            <option>HR</option>
+            <option>Finance</option>
+        </select><br>
+        <input type="number" name="salary" placeholder="Salary" required /><br>
+        <textarea name="permanentAddress" placeholder="Permanent Address" required></textarea><br>
+        <textarea name="currentAddress" placeholder="Current Address" required></textarea><br>
+        <input type="file" name="idProofFile" accept="application/pdf" required /><br>
+        <button type="submit">Add Employee</button>
+		
+		<button type="button" onclick="window.location.href=' search.html'">Go to Search Page</button>
+
+    </form>
+
+    <script>
+        document.getElementById("empForm").onsubmit = async function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const response = await fetch("/api/employees/add", {
+                method: "POST",
+                body: formData
+            });
+            const result = await response.json();
+            alert("Employee added with ID: " + result.employeeId);
+			if (response.ok) {
+			            // ✅ Redirect to search.html after success
+			            window.location.href = "employee_search.html";
+			        } else {
+			            const msg = await response.text();
+			            alert("Error: " + msg);
+			        }
+        }
+    </script>
+</body>
+</html>

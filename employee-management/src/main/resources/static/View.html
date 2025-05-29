@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Employee</title>
+</head>
+<body>
+    <h2>Employee Details</h2>
+    <div id="details"></div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get("id");
+
+        fetch(`/api/employees/view/${id}`)
+            .then(res => res.json())
+            .then(emp => {
+                const details = `
+                    <p><strong>Employee ID:</strong> ${emp.employeeId}</p>
+                    <p><strong>Name:</strong> ${emp.firstName} ${emp.lastName}</p>
+                    <p><strong>Login ID:</strong> ${emp.loginId}</p>
+                    <p><strong>DOB:</strong> ${emp.dob}</p>
+                    <p><strong>Department:</strong> ${emp.department}</p>
+                    <p><strong>Salary:</strong> ${emp.salary}</p>
+                `;
+                document.getElementById("details").innerHTML = details;
+            });
+    </script>
+</body>
+</html>

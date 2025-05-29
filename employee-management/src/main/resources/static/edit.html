@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Employee</title>
+</head>
+<body>
+    <h2>Edit Employee</h2>
+    <form id="editForm">
+        <input type="hidden" name="id">
+		<p>Employee ID (EmpId): <input type="text" name="employeeId" readonly></p>
+        <p>First Name: <input type="text" name="firstName"></p>
+        <p>Last Name: <input type="text" name="lastName"></p>
+        <p>Login ID: <input type="text" name="loginId"></p>
+        <p>DOB: <input type="date" name="dob"></p>
+        <p>Department: 
+            <select name="department">
+                <option value="Engineering">Engineering</option>
+                <option value="Support">Support</option>
+                <option value="HR">HR</option>
+                <option value="Finance">Finance</option>
+            </select>
+        </p>
+        <p>Salary: <input type="number" name="salary"></p>
+        <button type="submit">Save</button>
+    </form>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get("id");
+
+        const form = document.getElementById("editForm");
+
+        fetch(`/api/employees/view/${id}`)
+            .then(res => res.json())
+            .then(emp => {
+                form.id.value = emp.id;
+				form.employeeId.value = emp.employeeId;
+                form.firstName.value = emp.firstName;
+                form.lastName.value = emp.lastName;
+                form.loginId.value = emp.loginId;
+                form.dob.value = emp.dob;
+                form.department.value = emp.department;
+                form.salary.value = emp.salary;
+            });
+
+        form.onsubmit = async function(e) {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const payload = Object.fromEntries(formData.entries());
+
+				fetch(`/api/employees/edit/${id}`, {
+                method: 'PUT',
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+
+            alert("Updated successfully");
+            window.location.href = "search.html";
+        }
+    </script>
+</body>
+</html>
